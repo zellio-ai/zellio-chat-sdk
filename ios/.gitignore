@@ -1,0 +1,7 @@
+.build/
+.swiftpm/
+*.xcodeproj/
+DerivedData/
+
+# The root .gitignore has generated/, and git on Windows ignores case. The strings table must ship with the package.
+!Sources/ZellioChatCore/Generated/

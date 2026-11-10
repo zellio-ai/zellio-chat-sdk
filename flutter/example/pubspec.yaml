@@ -1,0 +1,22 @@
+name: zellio_chat_example
+description: A small store-like app that shows the zellio_chat plugin.
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.0
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  zellio_chat:
+    path: ../
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true

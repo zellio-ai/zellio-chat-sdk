@@ -1,0 +1,8 @@
+{
+  "data": {
+    "sessionToken": "tok_abc",
+    "expiresAt": "2026-12-03T10:00:00.000Z",
+    "customer": { "identified": true, "name": "Mona Adel" },
+    "versionId": "ver_1"
+  }
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  For android:dataExtractionRules (Android 12 and higher): cloud backup and device transfer.
+  Merge them into the host app's own rules.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="file" path="zellio-chat/" />
+        <exclude domain="cache" path="zellio-images/" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="file" path="zellio-chat/" />
+        <exclude domain="cache" path="zellio-images/" />
+    </device-transfer>
+</data-extraction-rules>

@@ -1,0 +1,4 @@
+# The sample app is a demo and is never published. deepmerge is a build-time dependency of its tooling.
+[[IgnoredVulns]]
+id = "GHSA-gcqx-w48m-w2h4"
+reason = "No fixed version exists. Dev tooling of a demo app that is not shipped to customers."

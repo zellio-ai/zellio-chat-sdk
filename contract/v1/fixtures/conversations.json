@@ -1,0 +1,18 @@
+{
+  "data": {
+    "conversations": [
+      {
+        "id": "conv_2", "status": "open", "lastMessageAt": "2026-11-03T10:00:00.000Z",
+        "lastMessage": { "from": "agent", "text": "Your order is on the way.", "hasAttachment": false, "attachmentKind": null },
+        "agentName": "Mona", "agentAvatarUrl": null, "unread": 1
+      },
+      {
+        "id": "conv_1", "status": "resolved", "lastMessageAt": "2026-10-20T08:30:00.000Z",
+        "lastMessage": { "from": "visitor", "text": "", "hasAttachment": true, "attachmentKind": "image" },
+        "agentName": null, "agentAvatarUrl": null, "unread": 0
+      }
+    ],
+    "nextCursor": null,
+    "unreadTotal": 1
+  }
+}

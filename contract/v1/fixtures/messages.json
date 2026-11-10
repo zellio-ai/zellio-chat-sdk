@@ -1,0 +1,12 @@
+{
+  "data": {
+    "conversationId": "conv_2",
+    "messages": [
+      { "id": "msg_1", "clientMessageId": "6f1c2a10-7a55-4f0c-9c55-1a2b3c4d5e6f", "from": "visitor", "text": "فين طلبي؟", "attachments": [], "createdAt": "2026-11-03T09:58:00.000Z", "agentName": null, "agentAvatarUrl": null },
+      { "id": "msg_2", "clientMessageId": null, "from": "agent", "text": "Your order is on the way.", "attachments": [{ "kind": "image", "url": "https://cdn.example/receipt.jpg", "name": "receipt.jpg", "mimeType": "image/jpeg", "size": 48211 }], "createdAt": "2026-11-03T10:00:00.000Z", "agentName": "Mona", "agentAvatarUrl": null },
+      { "id": "msg_3", "clientMessageId": null, "from": "future-sender", "text": "SDKs must skip this", "attachments": [], "createdAt": "2026-11-03T10:01:00.000Z", "agentName": null, "agentAvatarUrl": null }
+    ],
+    "nextBefore": "cursor_older",
+    "latest": "cursor_latest"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "data": {
+    "protocol": "studio-v1",
+    "snapshot": {
+      "schemaVersion": 1, "siteId": "ws_1~site_1", "versionId": "ver_1", "layout": "support",
+      "language": { "mode": "both", "defaultLocale": "ar", "startIn": "browser" },
+      "appearance": {
+        "brandName": "Nile Store", "logoFileId": "file_1", "logoAlt": { "en": "Nile Store", "ar": "متجر النيل" },
+        "primaryColor": "#7D3BED", "customerMessageColor": "#7D3BED", "surfaceColor": "#FFFFFF",
+        "theme": "auto", "density": "comfortable", "corners": "rounded", "position": "right",
+        "desktopOffset": 20, "mobileOffset": 16, "launcherSize": 56, "launcherLabel": {},
+        "showAgentAvatar": true, "soundEnabled": false, "unreadBadge": true, "showAttribution": true,
+        "launcherIcon": "bubbles", "launcherShape": "circle", "headerStyle": "gradient", "mirrorInRtl": true,
+        "welcomeBubble": { "enabled": false, "text": {}, "delaySeconds": 5 }
+      },
+      "modules": [
+        { "id": "m1", "type": "start-conversation", "label": { "en": "Talk to our team", "ar": "كلّم فريقنا" }, "visibility": {}, "primary": true },
+        { "id": "m2", "type": "announcement", "label": { "en": "Eid delivery", "ar": "توصيل العيد" }, "description": { "en": "Orders placed today arrive on Sunday.", "ar": "الطلبات النهاردة توصل يوم الحد." }, "visibility": {} },
+        { "id": "m3", "type": "external-link", "label": { "en": "Track my order", "ar": "تتبّع طلبي" }, "href": "https://shop.example/track", "visibility": {} },
+        { "id": "m4", "type": "future-module-type", "label": { "en": "SDKs must skip this" }, "visibility": {} }
+      ],
+      "screens": {
+        "heading": { "en": "How can we help?", "ar": "إزاي نقدر نساعدك؟" },
+        "greeting": { "en": "Hi! Tell us what you need help with.", "ar": "أهلاً! قولّنا محتاج إيه." },
+        "description": { "en": "We usually reply in a few minutes.", "ar": "غالباً بنرد في دقايق." },
+        "offline": { "en": "We are away. Leave a message and we will reply when we are back.", "ar": "إحنا مش متاحين دلوقتي. سيب رسالتك وهنرد عليك أول ما نرجع." }
+      },
+      "behavior": {
+        "allowAttachments": true, "inheritHours": true, "replyExpectation": { "en": "Usually within minutes", "ar": "غالباً في دقايق" },
+        "consentRequired": true, "consentText": { "en": "We store your messages and share them with our support team.", "ar": "هنحفظ رسايلك ونشاركها مع فريق الدعم." },
+        "privacyUrl": "https://shop.example/privacy"
+      },
+      "futureField": "SDKs must ignore this"
+    },
+    "assets": { "logoUrl": "https://cdn.example/logo.png" },
+    "availability": { "online": true },
+    "app": { "allowGuests": true, "minSdkVersion": null }
+  }
+}

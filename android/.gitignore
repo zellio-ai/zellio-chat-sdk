@@ -1,0 +1,11 @@
+.gradle/
+build/
+local.properties
+*.iml
+.idea/
+.kotlin/
+captures/
+
+# generated from sdks/design/strings.json by :zellio-chat:generateStrings
+zellio-chat/src/main/res/values/zc_strings.xml
+zellio-chat/src/main/res/values-ar/zc_strings.xml

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  For android:fullBackupContent (Android 11 and lower). The SDK keeps all chat data in noBackupFilesDir,
+  which the system never backs up. These rules make that explicit and cover the cache directories.
+  Merge them into the host app's own rules.
+-->
+<full-backup-content>
+    <exclude domain="file" path="zellio-chat/" />
+    <exclude domain="cache" path="zellio-images/" />
+    <exclude domain="cache" path="zellio-camera/" />
+</full-backup-content>

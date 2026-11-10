@@ -1,0 +1,17 @@
+# pub uses this file INSTEAD of .gitignore in this folder, so the vendored iOS sources
+# (git-ignored, made by scripts/vendor-ios.sh) are part of the published package.
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+build/
+.build/
+.swiftpm/
+example/build/
+example/.dart_tool/
+example/android/.gradle/
+example/android/local.properties
+example/ios/Pods/
+example/ios/.symlinks/
+example/ios/Flutter/ephemeral/

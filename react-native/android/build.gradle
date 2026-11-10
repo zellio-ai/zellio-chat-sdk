@@ -1,0 +1,62 @@
+// Android half of @zellio/chat-react-native. A React Native app autolinks this module.
+//
+// SDK version: the Maven artifact ai.zellio:zellio-chat. Override with -PzellioChatAndroidVersion=x.y.z
+// (gradle.properties or the command line).
+//
+// Local SDK: publish sdks/android to ~/.m2 (`./gradlew :zellio-chat:publishReleasePublicationToMavenLocal`) and add
+//
+//     allprojects { repositories { mavenLocal() } }
+//
+// to the app's android/build.gradle (the sample does this behind -PzellioChatUseMavenLocal=true).
+
+if (project == rootProject) {
+  buildscript {
+    repositories {
+      google()
+      mavenCentral()
+    }
+    dependencies {
+      classpath "com.android.tools.build:gradle:9.2.1"
+      classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.0"
+    }
+  }
+}
+
+def sdkVersion = project.findProperty("zellioChatAndroidVersion") ?: "1.0.0"
+
+def ext(String name, Object fallback) {
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : fallback
+}
+
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+apply plugin: "com.facebook.react"
+
+android {
+  namespace "ai.zellio.chat.reactnative"
+  compileSdk ext("compileSdkVersion", 36)
+
+  defaultConfig {
+    minSdkVersion ext("minSdkVersion", 24)
+    targetSdkVersion ext("targetSdkVersion", 36)
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+}
+
+kotlin {
+  jvmToolchain(17)
+}
+
+repositories {
+  google()
+  mavenCentral()
+}
+
+dependencies {
+  implementation "com.facebook.react:react-android"
+  api "ai.zellio:zellio-chat:${sdkVersion}"
+}

@@ -1,0 +1,32 @@
+buildscript {
+    ext {
+        buildToolsVersion = "37.0.0"
+        minSdkVersion = 24
+        compileSdkVersion = 37
+        targetSdkVersion = 36
+        ndkVersion = "27.1.12297006"
+        // Stock React Native 0.88: Kotlin 2.2.0 and the Android Gradle Plugin that react-native-gradle-plugin pins.
+        kotlinVersion = "2.2.0"
+    }
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle")
+        classpath("com.facebook.react:react-native-gradle-plugin")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+    }
+}
+
+// ai.zellio:zellio-chat is not on Maven yet: with -PzellioChatUseMavenLocal=true (or in gradle.properties) it is
+// resolved from ~/.m2 after `./gradlew :zellio-chat:publishReleasePublicationToMavenLocal` in sdks/android.
+allprojects {
+    repositories {
+        if (findProperty("zellioChatUseMavenLocal") == "true") {
+            mavenLocal()
+        }
+    }
+}
+
+apply plugin: "com.facebook.react.rootproject"

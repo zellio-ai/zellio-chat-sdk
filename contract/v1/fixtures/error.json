@@ -1,0 +1,5 @@
+{
+  "code": "CHAT_SESSION_INVALID",
+  "message": "Your chat session expired. Reconnect to continue.",
+  "requestId": "req_8f2c1a9d"
+}

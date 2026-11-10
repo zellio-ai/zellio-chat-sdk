@@ -1,0 +1,9 @@
+node_modules/
+lib/
+plugin/build/
+# copied from ../ios/Sources by scripts/vendor-ios.mjs; shipped in the npm package through "files"
+ios/vendor/
+android/build/
+android/.gradle/
+ios/build/
+*.tgz
