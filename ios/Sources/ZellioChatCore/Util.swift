@@ -5,7 +5,7 @@ import FoundationNetworking
 
 /// SDK constants.
 public enum SDKInfo {
-    public static let version = "1.0.0"
+    public static let version = "1.0.1"
     public static let platform = "ios"
     public static let defaultBaseURL = "https://app.zellio.ai"
     public static let apiPath = "/api/v1/zeechat/mobile"

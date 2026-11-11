@@ -7,7 +7,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'zellio_chat'
-  s.version          = '1.0.0'
+  s.version          = '1.0.1'
   s.summary          = 'ZeeChat for Flutter. A thin wrapper over the native Zellio iOS chat SDK.'
   s.description      = <<-DESC
 A Flutter plugin for ZeeChat. The native SDK draws all screens. This plugin forwards calls and events.

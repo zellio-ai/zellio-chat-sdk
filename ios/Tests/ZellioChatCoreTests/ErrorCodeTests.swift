@@ -73,7 +73,7 @@ final class ErrorCodeTests: XCTestCase {
         let request = try XCTUnwrap(transport.requests.first)
         XCTAssertEqual(request.url.absoluteString, "https://app.example/api/v1/zeechat/mobile/unread")
         XCTAssertEqual(request.headers["x-zee-app-key"], "key_1")
-        XCTAssertEqual(request.headers["x-zee-sdk"], "ios/1.0.0")
+        XCTAssertEqual(request.headers["x-zee-sdk"], "ios/\(SDKInfo.version)")
         XCTAssertEqual(request.headers["x-zee-sdk-wrapper"], "flutter/1.0.0")
         XCTAssertEqual(request.headers["x-zee-session-token"], "tok")
         _ = try? await api.messages(conversationId: "c 1", before: "b", after: "a", token: "tok")

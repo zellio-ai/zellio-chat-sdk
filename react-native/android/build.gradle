@@ -22,7 +22,7 @@ if (project == rootProject) {
   }
 }
 
-def sdkVersion = project.findProperty("zellioChatAndroidVersion") ?: "1.0.0"
+def sdkVersion = project.findProperty("zellioChatAndroidVersion") ?: "1.0.1"
 
 def ext(String name, Object fallback) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : fallback

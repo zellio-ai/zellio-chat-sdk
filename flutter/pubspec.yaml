@@ -1,6 +1,6 @@
 name: zellio_chat
 description: ZeeChat for Flutter. A thin wrapper over the native Zellio iOS and Android chat SDKs. The native SDKs draw all screens.
-version: 1.0.0
+version: 1.0.1
 homepage: https://zellio.ai
 repository: https://github.com/zellio-ai/zellio-chat-sdk/tree/main/flutter
 issue_tracker: https://github.com/zellio-ai/zellio-chat-sdk/issues

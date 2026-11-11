@@ -1,5 +1,5 @@
 group = "ai.zellio.chat.flutter"
-version = "1.0.0"
+version = "1.0.1"
 
 buildscript {
     val kotlinVersion = "2.3.20"
@@ -58,5 +58,5 @@ kotlin {
 dependencies {
     // The native SDK. Change the version with -PzellioChatAndroidVersion=x.y.z (for example in gradle.properties).
     // To build against the checkout in sdks/android, see the "Build against the local Android SDK" part of the README.
-    implementation("ai.zellio:zellio-chat:${project.findProperty("zellioChatAndroidVersion") ?: "1.0.0"}")
+    implementation("ai.zellio:zellio-chat:${project.findProperty("zellioChatAndroidVersion") ?: "1.0.1"}")
 }

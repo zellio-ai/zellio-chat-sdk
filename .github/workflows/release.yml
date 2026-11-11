@@ -1,0 +1,174 @@
+name: Release
+
+# Publishes one version of every ZeeChat SDK package when a plain version tag (1.2.0) is pushed.
+# The iOS Swift package needs no job: Swift Package Manager reads the tag itself.
+#
+#   npm      @zellio/chat-react-native   trusted publishing (OIDC), no token
+#   pub.dev  zellio_chat                 automated publishing (OIDC), no token
+#   Maven    ai.zellio:zellio-chat(-fcm) Central Portal API, token + signing key from the `release` environment
+#
+# This file is authored in the Zellio monorepo at sdks/.github/workflows/release.yml and reaches this repo
+# with each release snapshot. Edit it there. Setup and the release steps: RELEASING.md.
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Versions match the tag
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+      - run: node scripts/check-release-version.mjs "${GITHUB_REF_NAME}"
+
+  maven:
+    name: Maven Central
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: release
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Build and sign into a local Maven folder
+        working-directory: android
+        env:
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [ -z "${ORG_GRADLE_PROJECT_signingInMemoryKey}" ]; then
+            echo "::error::SIGNING_KEY is not set in the release environment."
+            exit 1
+          fi
+          ./gradlew --no-daemon --console=plain "-Dmaven.repo.local=${RUNNER_TEMP}/m2" \
+            :zellio-chat:publishReleasePublicationToMavenLocal :zellio-chat-fcm:publishReleasePublicationToMavenLocal
+      - name: Make the Central Portal bundle
+        run: |
+          set -euo pipefail
+          src="${RUNNER_TEMP}/m2"
+          stage="${RUNNER_TEMP}/bundle"
+          mkdir -p "${stage}"
+          cd "${src}"
+          count=0
+          while IFS= read -r -d '' f; do
+            rel="${f#./}"
+            mkdir -p "${stage}/$(dirname "${rel}")"
+            cp "${f}" "${stage}/${rel}"
+            case "${rel}" in
+              *.asc) ;;
+              *)
+                if [ ! -f "${f}.asc" ]; then echo "::error::no signature for ${rel}"; exit 1; fi
+                md5sum "${f}" | cut -d' ' -f1 | tr -d '\n' > "${stage}/${rel}.md5"
+                sha1sum "${f}" | cut -d' ' -f1 | tr -d '\n' > "${stage}/${rel}.sha1"
+                count=$((count + 1))
+                ;;
+            esac
+          done < <(find ./ai/zellio -type f ! -name 'maven-metadata*' -print0)
+          if [ "${count}" -lt 10 ]; then echo "::error::expected at least 10 artifacts, found ${count}"; exit 1; fi
+          (cd "${stage}" && zip -qr "${RUNNER_TEMP}/bundle.zip" .)
+          echo "bundle: ${count} artifacts"
+      - name: Upload to the Central Portal and wait for PUBLISHED
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [ -z "${MAVEN_CENTRAL_USERNAME}" ] || [ -z "${MAVEN_CENTRAL_PASSWORD}" ]; then
+            echo "::error::MAVEN_CENTRAL_USERNAME or MAVEN_CENTRAL_PASSWORD is not set in the release environment."
+            exit 1
+          fi
+          auth="$(printf '%s:%s' "${MAVEN_CENTRAL_USERNAME}" "${MAVEN_CENTRAL_PASSWORD}" | base64 -w0)"
+          echo "::add-mask::${auth}"
+          api="https://central.sonatype.com/api/v1/publisher"
+          id="$(curl -sS --fail-with-body -X POST -H "Authorization: Bearer ${auth}" \
+            -F "bundle=@${RUNNER_TEMP}/bundle.zip" \
+            "${api}/upload?publishingType=AUTOMATIC&name=zellio-chat-android-${GITHUB_REF_NAME}")"
+          echo "deployment: ${id}"
+          for _ in $(seq 1 90); do
+            status="$(curl -sS --fail-with-body -X POST -H "Authorization: Bearer ${auth}" "${api}/status?id=${id}")"
+            state="$(printf '%s' "${status}" | jq -r .deploymentState)"
+            echo "state: ${state}"
+            case "${state}" in
+              PUBLISHED) exit 0 ;;
+              FAILED) printf '%s' "${status}" | jq .errors; exit 1 ;;
+            esac
+            sleep 30
+          done
+          echo "::error::deployment ${id} is not PUBLISHED after 45 minutes. Check it in the Central Portal."
+          exit 1
+
+  npm:
+    name: npm
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+      - name: npm 11.5.1 or newer (trusted publishing needs it)
+        run: |
+          set -euo pipefail
+          npm install -g npm@11
+          npm --version
+      - name: Install
+        working-directory: react-native
+        run: npm ci
+      - name: Publish (prepack checks the version, copies the iOS sources and builds)
+        working-directory: react-native
+        run: npm publish --access public
+
+  pub-dev:
+    name: pub.dev
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # setup-dart first: it saves the pub.dev OIDC token in the shared Dart config. Flutter comes second,
+      # so `dart` on PATH is Flutter's own (a bare Dart SDK cannot resolve the Flutter SDK packages).
+      - uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+      - name: Publish (publish.sh copies and checks the iOS sources first)
+        working-directory: flutter
+        run: |
+          set -euo pipefail
+          flutter pub get
+          bash scripts/publish.sh --force

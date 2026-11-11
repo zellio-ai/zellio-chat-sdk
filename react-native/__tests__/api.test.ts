@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { makeFakeNative, type FakeNative } from './fakeNative';
+import { WRAPPER } from '../src/version';
 
 let fake: FakeNative;
 
@@ -37,13 +38,13 @@ describe('forwarding', () => {
       bannerShowsPreview: false,
       themeMode: 'dark',
       primaryColor: '#112233',
-      wrapper: 'react-native/1.0.0',
+      wrapper: WRAPPER,
     });
   });
 
   it('configure leaves out options that were not set', () => {
     api.configure({ appKey: 'zk_test' });
-    expect(fake.module.configure).toHaveBeenCalledWith('zk_test', { wrapper: 'react-native/1.0.0' });
+    expect(fake.module.configure).toHaveBeenCalledWith('zk_test', { wrapper: WRAPPER });
   });
 
   it('forwards the simple calls', () => {
